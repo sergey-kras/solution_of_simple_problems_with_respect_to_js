@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var sequence = function (start, step) {
     if (start === void 0) { start = 0; }
     if (step === void 0) { step = 1; }
@@ -49,11 +50,43 @@ var partial = function (func) {
         return func.apply(null, Mparams.concat(params));
     };
 };
-function mult(a, b, c, d) { return a * b * c * d; }
-var add5 = partial(add, 5); // Мы получили функцию с 1 аргументом, которая прибавляет к любому числу 5
-console.log(add5(2)); // 7
-console.log(add5(10)); // 15
-console.log(add5(8)); // 13
-var mult23 = partial(mult, 2, 3); // мы зафиксировали первые 2 аргумента mult() как 2 и 3
-console.log(mult23(4, 5)); // 2*3*4*5 = 120
-console.log(mult23(1, 1)); // 2*3*1*1 = 6
+var partialAny = function (func) {
+    var Mparams = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        Mparams[_i - 1] = arguments[_i];
+    }
+    var obj = { e: 0 };
+    return function () {
+        var params = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            params[_i] = arguments[_i];
+        }
+        for (var Mitem in Mparams) {
+            if (Mparams[Mitem] === undefined) {
+                Mparams[Mitem] = params[obj.e];
+                params.splice(obj.e--, 1);
+                obj.e++;
+            }
+        }
+        Mparams = Mparams.concat(params);
+        Mparams.splice(func.length, Mparams.length - func.length);
+        console.log(Mparams);
+        return func.apply(null, Mparams);
+    };
+};
+var bind = function (func, ctx) {
+    return function () {
+        var params = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            params[_i] = arguments[_i];
+        }
+        return func.apply(ctx, params);
+    };
+};
+var pluck = function () {
+};
+var characters = [
+    { 'name': 'barney', 'age': 36 },
+    { 'name': 'fred', 'age': 40 }
+];
+console.log(pluck(characters, 'name')); // ['barney', 'fred']

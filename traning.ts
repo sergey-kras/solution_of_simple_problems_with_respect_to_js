@@ -1,3 +1,6 @@
+import { appendFile } from "fs";
+import { Context } from "vm";
+
 let sequence = (start: number = 0, step: number = 1) => {
     let obj = { e: 1 };
     return () => {
@@ -6,7 +9,6 @@ let sequence = (start: number = 0, step: number = 1) => {
         return start;
     }
 }
-
 let take = (func: Function, count: number) => {
     let some = [];
     for (let i = 0; i < count; i++) {
@@ -35,17 +37,34 @@ let partial = (func: Function, ...Mparams: Array<any>) => {
         return func.apply(null, Mparams.concat(params));
     }
 }
+let partialAny = (func: Function, ...Mparams: Array<any>) => {
+    let obj = { e: 0 };
+    return (...params: Array<any>) => {
+        for (let Mitem in Mparams) {
+            if (Mparams[Mitem] === undefined) {
+                Mparams[Mitem] = params[obj.e];
+                params.splice(obj.e--, 1);
+                obj.e++;
+            }
+        }
+        Mparams = Mparams.concat(params);
+        Mparams.splice(func.length, Mparams.length - func.length);
+        console.log(Mparams);
 
+        return func.apply(null, Mparams);
+    }
+}
+let bind = (func: Function, ctx: Context) => {
+    return (...params: Array<any>) => {
+        return func.apply(ctx, params);
+    }
+}
+let pluck = () => {
 
-function mult(a: number, b: number, c: number, d: number) { return a * b * c * d; }
+}
+var characters = [
+    { 'name': 'barney', 'age': 36 },
+    { 'name': 'fred', 'age': 40 }
+];
 
-var add5 = partial(add, 5); // Мы получили функцию с 1 аргументом, которая прибавляет к любому числу 5
-
-console.log(add5(2)); // 7
-console.log(add5(10)); // 15
-console.log(add5(8)); // 13
-
-var mult23 = partial(mult, 2, 3); // мы зафиксировали первые 2 аргумента mult() как 2 и 3
-
-console.log(mult23(4, 5)); // 2*3*4*5 = 120
-console.log(mult23(1, 1)); // 2*3*1*1 = 6
+console.log(pluck(characters, 'name')); // ['barney', 'fred']

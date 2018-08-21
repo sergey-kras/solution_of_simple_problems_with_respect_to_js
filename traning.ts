@@ -59,8 +59,14 @@ let bind = (func: Function, ctx: Context) => {
         return func.apply(ctx, params);
     }
 }
-let pluck = () => {
-
+let pluck = (arr: Object, name: string) => {
+    let result = [];
+    for (let Aitem in arr){
+        for(let Oitem in arr[Aitem]){
+            Oitem === name ? result.push(arr[Aitem][Oitem]) : null;
+        }
+    }
+    return result;
 }
 var characters = [
     { 'name': 'barney', 'age': 36 },

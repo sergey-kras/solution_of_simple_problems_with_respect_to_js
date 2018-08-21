@@ -59,18 +59,36 @@ let bind = (func: Function, ctx: Context) => {
         return func.apply(ctx, params);
     }
 }
-let pluck = (arr: Object, name: string) => {
+let pluck = (arr: Array<Object>, name: string) => {
     let result = [];
-    for (let Aitem in arr){
-        for(let Oitem in arr[Aitem]){
+    for (let Aitem in arr) {
+        for (let Oitem in arr[Aitem]) {
             Oitem === name ? result.push(arr[Aitem][Oitem]) : null;
         }
     }
     return result;
 }
-var characters = [
-    { 'name': 'barney', 'age': 36 },
-    { 'name': 'fred', 'age': 40 }
-];
+let filter = (arr: Array<any>, func: Function): Array<any> => {
+    let res = [];
+    for (let item in arr) {
+        func(arr[item]) ? res.push(arr[item]) : null;
+    }
+    return res;
+}
+let count = (obj: Object | Array<any>) => {
+    let count = 0;
+    for(let item in obj){
+        count++;
+    }
+    return count;
+}
 
-console.log(pluck(characters, 'name')); // ['barney', 'fred']
+var a = { a: 1, b: 2 };
+console.log(count(a)); // 2
+var b = function () {};
+console.log(count(b)); // 0
+var c = [1, 2, 3];
+console.log(count(c)); // 3
+var d = [];
+d[100] = 1;
+console.log(count(d)); // 1

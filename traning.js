@@ -92,8 +92,26 @@ var pluck = function (arr, name) {
     }
     return result;
 };
-var characters = [
-    { 'name': 'barney', 'age': 36 },
-    { 'name': 'fred', 'age': 40 }
-];
-console.log(pluck(characters, 'name')); // ['barney', 'fred']
+var filter = function (arr, func) {
+    var res = [];
+    for (var item in arr) {
+        func(arr[item]) ? res.push(arr[item]) : null;
+    }
+    return res;
+};
+var count = function (obj) {
+    var count = 0;
+    for (var item in obj) {
+        count++;
+    }
+    return count;
+};
+var a = { a: 1, b: 2 };
+console.log(count(a)); // 2
+var b = function () { };
+console.log(count(b)); // 0
+var c = [1, 2, 3];
+console.log(count(c)); // 3
+var d = [];
+d[100] = 1;
+console.log(count(d)); // 1
